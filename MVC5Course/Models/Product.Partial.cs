@@ -4,10 +4,45 @@ namespace MVC5Course.Models
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using ValidationAttribute;
+    using System.Linq;
 
     [MetadataType(typeof(ProductMetaData))]
-    public partial class Product
+    public partial class Product: IValidatableObject
     {
+        public int 訂單數量
+        {
+            get
+            {
+                return this.OrderLine.Count;
+                //return this.OrderLine.Count;
+                               //return this.OrderLine.Where(p => p.Qty > 400).Count;
+                               //return this.OrderLine.Where(p => p.Qty > 400).ToList().Count;
+                               //return this.OrderLine.Count(p => p.Qty > 400);
+            }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (this.Price > 100 && this.Stock > 5)
+            {
+                yield return new ValidationResult("價格與庫存數量不合理", new string[] { "Price", "Stock" });
+            }
+
+            using (var db = new FabricsEntities())
+            {
+                var prod = db.Product.FirstOrDefault(p => p.ProductId == this.ProductId);
+                if (prod.OrderLine.Count() > 10 && this.Stock > 1000)
+                {
+                    yield return new ValidationResult("Stock 與訂單數量不匹配", new string[] { "Stock" });
+                }
+            }
+            yield break;
+        }
+
+
+
+
     }
     
     public partial class ProductMetaData
@@ -20,6 +55,7 @@ namespace MVC5Course.Models
         //[MinLength(3), MaxLength(30)]
         //[RegularExpression("(.+)-(.+)", ErrorMessage = "商品名稱格式錯誤")]
         [DisplayName("商品名稱")]
+        [商品名稱必須包含Will字串(ErrorMessage = "商品名稱必須包含Will字串")]
         public string ProductName { get; set; }
        [Required]
        [Range(0, 9999, ErrorMessage = "請設定正確的商品價格範圍")]
