@@ -3,8 +3,31 @@
 @{
     ViewBag.Title = "ListProducts";
 }
+@*@if (TempData["msg"] !=null)
+{
+    <h2>@TempData["msg"]</h2>
+}
+
+<h2>ListProducts</h2>*@
+
+
+@if (TempData["CreateProduct_Result"] != null)
+{
+    <h1>@TempData["CreateProduct_Result"]</h1>
+}
 
 <h2>ListProducts</h2>
+
+<form method="get">
+    篩選:
+    @Html.TextBox("ProductName")
+    庫存數量：
+    @Html.TextBox("Stock_b")~
+    @Html.TextBox("Stock_e")
+    <button>搜尋</button>
+    @Html.ValidationMessage("Stock_b", new { @class = "text-danger" })
+    @Html.ValidationMessage("Stock_e", new { @class = "text-danger" })
+</form>
 
 <p>
     @Html.ActionLink("Create New", "Create")
