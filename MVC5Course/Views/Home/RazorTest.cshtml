@@ -1,0 +1,40 @@
+﻿@model int[]<
+@{
+    Layout = "";
+}
+
+
+@foreach (var i in @Model)
+{
+  @i
+}
+
+
+
+@foreach (var i in @Model)
+{
+    @(i+" ")
+
+}
+
+
+
+<ul>
+@foreach (var i in @Model)
+{
+ <li>@(i)</li>
+}
+</ul>
+
+
+
+@Html.Raw(ViewBag.ul1)
+@foreach (var i in @Model)
+{
+    @Html.Raw(ViewBag.li1)
+    @(i)
+    @Html.Raw(ViewBag.li2)
+    <text></text>
+
+}
+@Html.Raw(ViewBag.ul2)

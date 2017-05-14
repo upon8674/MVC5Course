@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using MVC5Course.Models;
 using MVC5Course.Models.ViewModel;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 
 namespace MVC5Course.Controllers
 {
@@ -17,6 +19,7 @@ namespace MVC5Course.Controllers
         private FabricsEntities db = new FabricsEntities();
 
         // GET: Products
+        //[OutputCache(Duration =5,Location =System.Web.UI.OutputCacheLocation)]
         public ActionResult Index(bool Active = true)
         {
             //var data = db.Product
@@ -60,9 +63,10 @@ namespace MVC5Course.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HandleError(ExceptionType = typeof(DbUpdateException), View = "Error_DbUpdateException")]
         public ActionResult Create([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
                 repo.Add(product);
                 repo.UnitOfWork.Commit();
@@ -96,12 +100,18 @@ namespace MVC5Course.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product)
-        {
-            if (ModelState.IsValid)
+        public ActionResult Edit(int id,FormCollection form)
+        { 
+            var product = repo.GetOneDataByProductId(id);
+           
+            //[Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product
+            //if (ModelState.IsValid)
+             
+                        if (TryUpdateModel(product,
+            includeProperties: new string[] { "ProductId", "ProductName", "Price", "Active", "Stock" }))
             {
                 
-                repo.Update(product);
+                //repo.Update(product);
                 repo.UnitOfWork.Commit();
                 //db.Entry(product).State = EntityState.Modified;
                 //db.SaveChanges();

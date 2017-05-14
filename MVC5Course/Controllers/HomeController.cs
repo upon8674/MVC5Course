@@ -10,19 +10,21 @@ namespace MVC5Course.Controllers
 {
     public class HomeController : Controller
     {
+        public int MyProperty { get; set; }
         FabricsEntities db = new FabricsEntities();
+        [SharedViewBag]
         public ActionResult Index()
         {
             return View();
         }
-
+        [SharedViewBag]
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            //ViewBag.Message = "Your application description page.";
+            throw new Exception();
+            //return View();
         }
-
+        [SharedViewBag]
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
@@ -37,9 +39,12 @@ namespace MVC5Course.Controllers
         {
             return View();
         }
+
+
+        [SharedViewBag(MyProperty = "")]
         public ActionResult PartialAbout()
         {
-            ViewBag.Message = "Your application description page.";
+           // ViewBag.Message = "Your application description page.";
             if (Request.IsAjaxRequest())
             {
                 return PartialView("About");
@@ -67,6 +72,22 @@ namespace MVC5Course.Controllers
             
             var data = db.Product.AsQueryable().Take(5);
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult VT()
+        {
+            ViewBag.IsEnabled = true;
+            ViewBag.Text = "<span>12345566</span>";
+            return View();
+        }
+        public ActionResult RazorTest()
+        {
+            int[] data = new int[] { 1, 2, 3, 4, 5 };
+            ViewBag.ul1 = "<ul>";
+            ViewBag.ul2 = "</ul>";
+            ViewBag.li1 = "<li>";
+            ViewBag.li2 = "</li>";
+
+            return PartialView(data);
         }
     }
 }
