@@ -55,6 +55,7 @@ namespace MVC5Course.Models
         //[MinLength(3), MaxLength(30)]
         //[RegularExpression("(.+)-(.+)", ErrorMessage = "商品名稱格式錯誤")]
         [DisplayName("商品名稱")]
+        [Required]
         //[商品名稱必須包含Will字串(ErrorMessage = "商品名稱必須包含Will字串")]
         public string ProductName { get; set; }
        [Required]
@@ -70,6 +71,10 @@ namespace MVC5Course.Models
         [DisplayName("商品庫存")]
         public Nullable<decimal> Stock { get; set; }
    
-       public virtual ICollection<OrderLine> OrderLine { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime CreatedOn { get; set; }
+
+        public virtual ICollection<OrderLine> OrderLine { get; set; }
     }
 }
